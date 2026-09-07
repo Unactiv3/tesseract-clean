@@ -724,6 +724,170 @@ function startAmbientGlitches(){
     document.body.appendChild(b);
     setTimeout(() => b.remove(), 1600);
   }, 9000);
+
+  /* ===================================================================
+     LAYER 1: CLEAN BUT WRONG — Micro-shift grid + Kerning decay
+     =================================================================== */
+  const gridTargets = ['#sidebar','#topbar','#main','.dash-grid','.focus-box','.chat-panel'];
+  setInterval(() => {
+    const sel = gridTargets[Math.floor(Math.random() * gridTargets.length)];
+    const el = document.querySelector(sel);
+    if (!el) return;
+    const shiftX = (Math.random() - 0.5) * 1;
+    el.classList.add('micro-shift');
+    el.style.transform = `translateX(${shiftX}px)`;
+    setTimeout(() => {
+      el.style.transform = '';
+      el.classList.remove('micro-shift');
+    }, 200);
+  }, 30000 + Math.random() * 30000);
+
+  setInterval(() => {
+    const h1 = document.querySelector('.view.active .view-head h1') || document.querySelector('.greet-row h1');
+    if (!h1) return;
+    const kern = -0.02 + Math.random() * 0.06;
+    h1.classList.add('kern-decay');
+    h1.style.letterSpacing = kern + 'em';
+    setTimeout(() => {
+      h1.style.letterSpacing = '';
+      h1.classList.remove('kern-decay');
+    }, 100);
+  }, 25000 + Math.random() * 35000);
+
+  /* ===================================================================
+     LAYER 2: BACKGROUND STATIC — Scanlines, noise canvas, crawler
+     =================================================================== */
+  const scanlines = document.getElementById('scanlines');
+  const noiseCanvas = document.getElementById('noise-canvas');
+  const crawler = document.getElementById('crawler');
+  const noiseCtx = noiseCanvas.getContext('2d');
+  let layer2Start = Date.now();
+
+  function resizeNoiseCanvas(){
+    noiseCanvas.width = window.innerWidth;
+    noiseCanvas.height = window.innerHeight;
+  }
+  resizeNoiseCanvas();
+  window.addEventListener('resize', resizeNoiseCanvas);
+
+  function drawNoise(){
+    const elapsed = (Date.now() - layer2Start) / 1000;
+    const opacity = Math.min(0.4, 0.05 + elapsed * 0.0012);
+    scanlines.style.opacity = opacity;
+    noiseCanvas.style.opacity = opacity;
+    const lineH = Math.max(2, 4 - elapsed * 0.003);
+    scanlines.style.backgroundSize = `100% ${lineH}px`;
+
+    const w = noiseCanvas.width, h = noiseCanvas.height;
+    if (w === 0 || h === 0) return;
+    const imgData = noiseCtx.createImageData(w, h);
+    const data = imgData.data;
+    const step = 4;
+    for (let y = 0; y < h; y += step){
+      for (let x = 0; x < w; x += step){
+        const v = Math.random() > 0.5 ? 255 : 0;
+        const g = Math.random() > 0.7 ? 180 : v;
+        for (let dy = 0; dy < step && y+dy < h; dy++){
+          for (let dx = 0; dx < step && x+dx < w; dx++){
+            const idx = ((y+dy) * w + (x+dx)) * 4;
+            data[idx] = v;
+            data[idx+1] = g;
+            data[idx+2] = v;
+            data[idx+3] = Math.random() > 0.7 ? 40 : 15;
+          }
+        }
+      }
+    }
+    noiseCtx.putImageData(imgData, 0, 0);
+  }
+  setInterval(drawNoise, 120);
+
+  let crawlerY = -10;
+  let crawlerActive = false;
+  let crawlerSpeed = 0.4;
+  function spawnCrawler(){
+    if (crawlerActive) return;
+    crawlerActive = true;
+    crawlerY = -10;
+    crawler.classList.add('crawler-active');
+  }
+  function tickCrawler(){
+    if (!crawlerActive) return;
+    crawlerY += crawlerSpeed;
+    crawler.style.top = crawlerY + 'px';
+    if (crawlerY > window.innerHeight + 10){
+      crawlerActive = false;
+      crawler.classList.remove('crawler-active');
+    }
+  }
+  setInterval(tickCrawler, 16);
+
+  const crawlerBase = 12000;
+  function scheduleCrawler(){
+    const elapsed = (Date.now() - layer2Start) / 1000;
+    const freq = Math.max(2000, crawlerBase - elapsed * 30);
+    const jitter = freq * 0.4;
+    crawlerSpeed = 0.4 + Math.min(elapsed * 0.001, 0.8);
+    setTimeout(() => {
+      spawnCrawler();
+      scheduleCrawler();
+    }, freq + (Math.random() - 0.5) * jitter);
+  }
+  scheduleCrawler();
+
+  /* ===================================================================
+     LAYER 3: PSEUDO-ELEMENT GLITCH — escalating clip-path glitch
+     =================================================================== */
+  const appEl = document.getElementById('app');
+  let layer3Start = Date.now();
+
+  function fireGlitch(){
+    const elapsed = (Date.now() - layer3Start) / 1000;
+    let interval, maxTranslate;
+    if (elapsed < 120){
+      interval = 15000; maxTranslate = 5;
+    } else if (elapsed < 300){
+      interval = 5000; maxTranslate = 20;
+    } else {
+      interval = 500; maxTranslate = 50;
+    }
+    const tx = (Math.random() - 0.5) * 2 * maxTranslate;
+    appEl.style.setProperty('--glitch-x', tx + 'px');
+    const sliceA = Math.random() * 80;
+    const sliceB = sliceA + 10 + Math.random() * 20;
+    appEl.style.setProperty('--clip-a', `inset(${sliceA}% 0 ${100-sliceB}% 0)`);
+    const sliceC = Math.random() * 80;
+    const sliceD = sliceC + 5 + Math.random() * 15;
+    appEl.style.setProperty('--clip-b', `inset(${sliceC}% 0 ${100-sliceD}% 0)`);
+    appEl.classList.add('glitch-on');
+    setTimeout(() => appEl.classList.remove('glitch-on'), 120);
+    setTimeout(fireGlitch, interval + (Math.random() - 0.5) * interval * 0.3);
+  }
+  setTimeout(fireGlitch, 15000);
+
+  /* ===================================================================
+     LAYER 4: GHOST CURSOR — delayed after-image following mouse
+     =================================================================== */
+  const ghostCursor = document.getElementById('ghost-cursor');
+  let mouseX = -100, mouseY = -100;
+  let ghostX = -100, ghostY = -100;
+  let ghostLatency = 80;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function tickGhost(){
+    const elapsed = (Date.now() - layer2Start) / 1000;
+    ghostLatency = 80 + Math.min(elapsed * 3, 320);
+    ghostX += (mouseX - ghostX) * (16 / ghostLatency);
+    ghostY += (mouseY - ghostY) * (16 / ghostLatency);
+    ghostCursor.style.left = ghostX + 'px';
+    ghostCursor.style.top = ghostY + 'px';
+    requestAnimationFrame(tickGhost);
+  }
+  tickGhost();
 }
 
 })();

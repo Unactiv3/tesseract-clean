@@ -292,6 +292,45 @@ input{font-family:var(--mono);}
 }
 #invert-flash{position:fixed;inset:0;z-index:400;pointer-events:none;background:#fff;opacity:0;mix-blend-mode:difference;}
 
+/* ============ LAYER 1: CLEAN BUT WRONG ============ */
+.micro-shift{transition:transform 120ms ease, padding 120ms ease;}
+#main{transition:transform 120ms ease;}
+.kern-decay{transition:letter-spacing 100ms ease;}
+
+/* ============ LAYER 2: BACKGROUND STATIC ============ */
+#scanlines{
+  position:fixed;inset:0;pointer-events:none;z-index:250;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);
+  opacity:0.05;transition:opacity 2s ease;
+}
+#noise-canvas{position:fixed;inset:0;pointer-events:none;z-index:251;opacity:0.05;mix-blend-mode:overlay;transition:opacity 2s ease;}
+#crawler{
+  position:fixed;left:0;right:0;height:3px;pointer-events:none;z-index:252;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,46,154,0.4) 20%,rgba(46,230,255,0.3) 50%,rgba(139,92,246,0.4) 80%,transparent 100%);
+  opacity:0;box-shadow:0 0 8px rgba(255,46,154,0.3);
+}
+.crawler-active{opacity:1 !important;}
+
+/* ============ LAYER 3: PSEUDO-ELEMENT GLITCH ============ */
+#app::before,#app::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:350;opacity:0;transition:none;
+}
+#app.glitch-on::before{
+  clip-path:var(--clip-a, inset(10% 0 85% 0));transform:translateX(var(--glitch-x,5px));
+  background:rgba(255,46,154,0.04);opacity:1;
+}
+#app.glitch-on::after{
+  clip-path:var(--clip-b, inset(60% 0 30% 0));transform:translateX(calc(var(--glitch-x,5px) * -1));
+  background:rgba(46,230,255,0.04);opacity:1;
+}
+
+/* ============ LAYER 4: GHOST CURSOR ============ */
+#ghost-cursor{
+  position:fixed;width:20px;height:20px;border:1px solid var(--cyan);border-radius:50%;
+  pointer-events:none;z-index:600;mix-blend-mode:difference;opacity:0.3;
+  transform:translate(-50%,-50%);transition:opacity 2s ease;
+}
+
 /* ============ mobile ============ */
 @media (max-width:820px){
   #app{grid-template-columns:1fr;grid-template-rows:56px 1fr 58px;
