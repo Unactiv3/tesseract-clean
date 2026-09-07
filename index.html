@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEADPIXEL // STUDY HALL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ INTRO SEQUENCE ============ -->
+<div id="intro">
+
+  <div class="intro-screen active" id="screen-boot">
+    <div id="boot-log"></div>
+    <div id="boot-title" style="display:none;">
+      <h1>DEADPIXEL</h1>
+      <h2>STUDY HALL</h2>
+      <p>LEARN. FOCUS. RESTORE.</p>
+    </div>
+    <div class="boot-bar-wrap" style="display:none;" id="boot-bar-wrap">
+      <div class="boot-bar-track"><div class="boot-bar-fill" id="bootBarFill"></div></div>
+      <div class="boot-pct" id="bootPct">0%</div>
+    </div>
+    <div class="skip-hint">click to skip intro</div>
+  </div>
+
+  <div class="intro-screen" id="screen-glitch">
+    <div class="welcome-stack" id="welcomeStack"></div>
+  </div>
+
+  <div class="intro-screen" id="screen-jump">
+    <div class="skull">
+      <div class="skull-grid" id="skullGrid"></div>
+    </div>
+    <div class="jumpscare-text">HELLO... STUDY... FOREVER...</div>
+  </div>
+
+  <div class="intro-screen" id="screen-welcome-back">
+    <div class="wb-box">
+      <div class="wb-just">Just kidding. 🙂</div>
+      <div class="wb-title">WELCOME TO</div>
+      <div class="wb-title2">DEADPIXEL</div>
+      <div class="wb-title" style="margin-bottom:8px;">STUDY HALL</div>
+      <div class="wb-sub">YOUR KNOWLEDGE. YOUR PIXELS.</div>
+      <button class="btn btn-primary" id="enterBtn" style="padding:12px 34px;letter-spacing:0.1em;">ENTER</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ AMBIENT GLITCH LAYER ============ -->
+<div id="glitch-layer"></div>
+<div id="invert-flash"></div>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app">
+  <aside id="sidebar">
+    <div class="brand"><span class="brand-dot"></span><span>DEADPIXEL</span></div>
+    <ul class="navlist">
+      <li><button class="navlink active" data-view="dashboard"><span class="ic">▣</span> Dashboard</button></li>
+      <li><button class="navlink" data-view="subjects"><span class="ic">◈</span> Subjects</button></li>
+      <li><button class="navlink" data-view="notes"><span class="ic">▤</span> Notes</button></li>
+      <li><button class="navlink" data-view="focus"><span class="ic">◉</span> Focus</button></li>
+      <li><button class="navlink" data-view="tutor"><span class="ic">✦</span> AI Tutor</button></li>
+      <li><button class="navlink" data-view="lab"><span class="ic">▦</span> Pixel Lab</button></li>
+      <li><button class="navlink" data-view="achievements"><span class="ic">✪</span> Achievements</button></li>
+      <li><button class="navlink" data-view="settings"><span class="ic">⚙</span> Settings</button></li>
+    </ul>
+  </aside>
+
+  <div id="topbar">
+    <div class="topbar-left"><span class="status-dot"></span> SYSTEM ONLINE</div>
+    <div class="topbar-right">
+      <span>PIXEL DAMAGE <span class="pixel-damage" id="pixelDamage">13%</span></span>
+      <span id="clock">00:00</span>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- DASHBOARD -->
+    <section class="view active" id="view-dashboard">
+      <div class="greet-row">
+        <h1>Good evening, <input class="name-input" id="nameInput" value="Explorer" maxlength="16"></h1>
+      </div>
+      <p class="dim" style="margin:-14px 0 20px;font-size:12.5px;">Another pixel closer to your goals.</p>
+
+      <div class="dash-grid">
+        <div class="panel stat-card">
+          <div class="label">Today's progress</div>
+          <div class="stat-big" id="dashProgress">73%</div>
+          <div class="dim" style="font-size:11px;margin:4px 0 10px;">RESTORED</div>
+          <div class="progress-track"><div class="progress-fill" style="width:73%;"></div></div>
+          <div class="dim" style="font-size:11px;margin-top:8px;">3/5 topics completed</div>
+        </div>
+        <div class="panel stat-card">
+          <div class="label">Study streak</div>
+          <div class="stat-big pink">🔥 6 days</div>
+          <div class="streak-days">
+            <span class="on">M</span><span class="on">T</span><span class="on">W</span>
+            <span class="on">T</span><span class="on">F</span><span>S</span><span>S</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="subjects-row">
+        <div>
+          <h4 class="dim" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">Your subjects</h4>
+          <div class="subject-cards" id="subjectCards"></div>
+        </div>
+        <div class="panel quick-actions">
+          <h4>Quick actions</h4>
+          <button class="qa-btn" data-goto="focus">◉ Start focus session</button>
+          <button class="qa-btn" data-goto="tutor">✦ Open AI tutor</button>
+          <button class="qa-btn" data-goto="notes">▤ Browse notes</button>
+          <button class="qa-btn" data-goto="lab">▦ Explore pixel lab</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBJECTS -->
+    <section class="view" id="view-subjects">
+      <div class="view-head"><h1 id="subjTitle">C Programming</h1><p><span id="subjPct">58</span>% Restored</p></div>
+      <div class="progress-track" style="margin-bottom:16px;"><div class="progress-fill" id="subjBar" style="width:58%;"></div></div>
+      <div class="subj-tabs">
+        <button class="subj-tab active" data-tab="chapters">Chapters</button>
+        <button class="subj-tab" data-tab="notes">Notes</button>
+        <button class="subj-tab" data-tab="quiz">Quiz</button>
+      </div>
+      <div class="subj-body" id="subjBody"></div>
+    </section>
+
+    <!-- NOTES / LIBRARY -->
+    <section class="view" id="view-notes">
+      <div class="view-head"><h1>/deadpixel/library</h1><p>Some files restored cleanly. Some didn't.</p></div>
+      <div class="notes-wrap">
+        <div class="panel tree-panel" id="treePanel"></div>
+        <div class="panel notes-content" id="notesContent">
+          <p class="dim">Select a file to preview it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOCUS MODE -->
+    <section class="view" id="view-focus">
+      <div class="view-head"><h1>Focus Mode</h1><p>Pomodoro sessions, watched over by the room.</p></div>
+      <div class="focus-wrap">
+        <div class="dur-row" id="durRow">
+          <button class="btn dur-btn active" data-dur="1500">25:00</button>
+          <button class="btn dur-btn" data-dur="3000">50:00</button>
+          <button class="btn dur-btn" data-dur="0">No limit</button>
+        </div>
+        <div class="panel focus-box">
+          <div class="focus-label">FOCUS MODE</div>
+          <div class="focus-timer" id="focusTimer">25:00</div>
+          <div class="focus-subject" id="focusSubjectLabel">C Programming / Data Types</div>
+          <div class="focus-meter-row"><span>Distraction level</span><span id="distPct">12%</span></div>
+          <div class="focus-meter"><div class="focus-meter-fill" id="distFill" style="width:12%;"></div></div>
+          <div class="focus-quote" id="focusQuote">"Small steps build big dreams. &lt;3"</div>
+          <div class="focus-controls">
+            <button class="btn" id="focusPause">⏸ Pause</button>
+            <button class="btn" id="focusEnd">■ End</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI TUTOR -->
+    <section class="view" id="view-tutor">
+      <div class="view-head"><h1>AI Tutor</h1><p>PIXEL_01 is online.</p></div>
+      <div class="tutor-wrap">
+        <div class="panel chat-panel">
+          <div class="chat-log" id="chatLog"></div>
+          <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="Type your question…" maxlength="200">
+            <button class="btn btn-primary" id="chatSend">➤</button>
+          </div>
+        </div>
+        <div class="panel prompts-panel">
+          <h4>Quick prompts</h4>
+          <button class="prompt-btn" data-prompt="Explain this topic">💡 Explain this topic</button>
+          <button class="prompt-btn" data-prompt="Give me 5 questions">❓ Give me 5 questions</button>
+          <button class="prompt-btn" data-prompt="Summarize notes">📝 Summarize notes</button>
+          <button class="prompt-btn" data-prompt="Help with error">⚠ Help with error</button>
+          <button class="prompt-btn" data-prompt="Study plan">📅 Study plan</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PIXEL LAB -->
+    <section class="view" id="view-lab">
+      <div class="view-head"><h1>Pixel Lab</h1><p>Find the dead pixel before it finds you.</p></div>
+      <div class="lab-wrap">
+        <div class="lab-head-row">
+          <div class="dim" style="font-size:12px;">DIFFICULTY <span class="lab-diff" id="labDiff"></span></div>
+          <div class="dim" style="font-size:12px;">SCORE <span id="labScore" style="color:var(--cyan);">0</span></div>
+        </div>
+        <div class="lab-grid" id="labGrid"></div>
+        <div class="lab-status" id="labStatus">Click "PIXEL LAB.EXE" to begin.</div>
+        <button class="btn btn-primary" id="labStart" style="margin-top:16px;letter-spacing:0.08em;">▶ PIXEL LAB.EXE — READY</button>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+    <section class="view" id="view-achievements">
+      <div class="view-head"><h1>Achievements</h1><p>Every restored pixel counts.</p></div>
+      <div class="ach-grid" id="achGrid"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="view-settings">
+      <div class="view-head"><h1>Settings</h1></div>
+      <div class="panel">
+        <div class="settings-row"><span>Display name</span><span class="dim" id="settingsName">Explorer</span></div>
+        <div class="settings-row"><span>Ambient glitches</span><span class="dim">Enabled</span></div>
+        <div class="settings-row"><span>Reduced motion</span><span class="dim">Follows system setting</span></div>
+        <div class="settings-row"><span>Reset progress</span><button class="btn" id="resetBtn">Reset</button></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
